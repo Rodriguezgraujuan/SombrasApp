@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="medieval_brown">#5A341A</color>
+    <color name="medieval_brown_light">#7C4A23</color>
+    <color name="medieval_parchment">#E0C38B</color>
+    <color name="medieval_gold">#D4A649</color>
+    <color name="medieval_text_light">#FFF4D6</color>
+    <color name="medieval_shadow">#2E1A10</color>
+    <color name="medieval_brown_dark">#2C1509</color>
+</resources>
