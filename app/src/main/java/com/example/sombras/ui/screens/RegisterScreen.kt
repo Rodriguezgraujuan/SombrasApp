@@ -36,6 +36,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sombras.R
+import com.example.sombras.data.model.RegisterRequest
+import com.example.sombras.data.model.RegisterResponse
+import com.example.sombras.retroflit.apiService
 
 
 @Composable
@@ -132,7 +135,25 @@ fun RegisterScreen(
             )
 
             Button(
-                onClick = onRegisterClick,
+                onClick = {
+                    val request = RegisterRequest(username, email, password)
+                    apiService.registerUser(request).enqueue(object : retrofit2.Callback<RegisterResponse> {
+                        override fun onResponse(
+                            call: retrofit2.Call<RegisterResponse>,
+                            response: retrofit2.Response<RegisterResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                println("Usuario registrado correctamente")
+                            } else {
+                                println("Error: ${response.message()}")
+                            }
+                        }
+
+                        override fun onFailure(call: retrofit2.Call<RegisterResponse>, t: Throwable) {
+                            println("Fallo en la conexión: ${t.message}")
+                        }
+                    })
+                },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFFE2B646),
@@ -144,6 +165,7 @@ fun RegisterScreen(
                     modifier = Modifier.padding(12.dp)
                 )
             }
+
 
             Spacer(modifier = Modifier.height(16.dp))
 
