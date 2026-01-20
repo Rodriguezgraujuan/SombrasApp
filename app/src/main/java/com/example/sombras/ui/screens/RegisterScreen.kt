@@ -144,6 +144,7 @@ fun RegisterScreen(
                         ) {
                             if (response.isSuccessful) {
                                 println("Usuario registrado correctamente")
+                                onRegisterClick()   // 👈 navegar después de registrarse
                             } else {
                                 println("Error: ${response.message()}")
                             }

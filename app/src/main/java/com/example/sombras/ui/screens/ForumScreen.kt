@@ -17,7 +17,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.sombras.R
+import com.example.sombras.menu.MainTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -28,7 +30,8 @@ fun ForumScreen(
     onReglasClick: () -> Unit = {},
     onGuiaCombateClick: () -> Unit = {},
     onAgregarAmigoClick: () -> Unit = {},
-    onEliminarAmigoClick: () -> Unit = {}
+    onEliminarAmigoClick: () -> Unit = {},
+    navController: NavController
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -43,9 +46,8 @@ fun ForumScreen(
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Toolbar
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.temas_y_gu_as), color = Color(0xFFCDAA45)) },
+                title = { Text(text = stringResource(id = R.string.notificaciones), color = Color(0xFFCDAA45)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                     titleContentColor = Color(0xFFCDAA45)
@@ -188,10 +190,4 @@ fun ForumScreen(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ForumScreenPreview() {
-    ForumScreen()
 }

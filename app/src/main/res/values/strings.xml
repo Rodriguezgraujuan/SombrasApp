@@ -39,4 +39,6 @@
     <string name="agregar_amigo">Agregar amigo</string>
     <string name="eliminar_amigo">Eliminar amigo</string>
     <string name="notificaciones">Notificaciones</string>
+    <string name="marcar_todas">Marcar todas como leídas</string>
+    <string name="eliminar_todas">Eliminar todas</string>
 </resources>
