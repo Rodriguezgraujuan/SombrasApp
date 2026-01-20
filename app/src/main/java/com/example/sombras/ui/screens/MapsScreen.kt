@@ -37,7 +37,6 @@ fun MapsScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -48,21 +47,12 @@ fun MapsScreen(
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Toolbar
-            TopAppBar(
-                title = { Text(text = "Mapas", color = Color(0xFFCDAA45)) }, // medieval_text_light
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color(0xFFCDAA45)
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState())
+                    .padding(top = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 

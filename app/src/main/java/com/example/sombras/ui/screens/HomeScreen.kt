@@ -33,7 +33,6 @@ fun HomeScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -42,32 +41,17 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         )
 
-        // Contenido scrollable
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Toolbar
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.inicio), color = Color.White) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color.White,
-                ),
-                actions = {
-                    // Aquí podrías poner íconos de menú si quieres
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Scrollable content
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
+                    .padding(24.dp)
+                    .padding(top = 60.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // Imagen principal
                 Image(
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Imagen de bienvenida",
@@ -79,7 +63,6 @@ fun HomeScreen(
                         .padding(bottom = 16.dp)
                 )
 
-                // Texto de bienvenida
                 Text(
                     text = "Bienvenido a la app",
                     color = Color.White,

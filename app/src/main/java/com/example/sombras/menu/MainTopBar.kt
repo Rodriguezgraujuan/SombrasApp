@@ -19,7 +19,8 @@ fun MainTopAppBar(
     TopAppBar(
         title = {},
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color(0xFF000000) // fondo negro como en XML
+            containerColor = Color.Transparent,
+            scrolledContainerColor = Color.Transparent
         ),
         actions = {
             Row(

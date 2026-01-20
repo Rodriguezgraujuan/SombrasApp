@@ -6,10 +6,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -25,20 +25,31 @@ import com.example.sombras.ui.screens.NotificationsScreen
 import com.example.sombras.ui.screens.ProfileScreen
 import com.example.sombras.ui.screens.RegisterScreen
 import com.example.sombras.ui.theme.SombrasTheme
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.statusBarColor = android.graphics.Color.TRANSPARENT
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
 
             SombrasTheme {
                 Scaffold(
+                    containerColor = Color.Transparent,
                     topBar = {
-                        MainTopAppBar { route ->
-                            navController.navigate(route)
+                        if (currentRoute != Routes.Login.route &&
+                            currentRoute != Routes.Register.route
+                        ) {
+                            MainTopAppBar { route ->
+                                navController.navigate(route) {
+                                    launchSingleTop = true
+                                }
+                            }
                         }
                     }
                 ) { innerPadding ->
@@ -47,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     NavHost(
                         navController = navController,
                         startDestination = Routes.Login.route,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.fillMaxSize()
                     ) {
                         composable(Routes.Home.route) {
                             HomeScreen { route ->

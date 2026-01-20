@@ -32,7 +32,6 @@ fun NotificationsScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -43,20 +42,11 @@ fun NotificationsScreen(
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Toolbar
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.notificaciones), color = Color(0xFFCDAA45)) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color(0xFFCDAA45)
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(12.dp)
+                    .padding(top = 50.dp),
             ) {
 
                 // Lista de notificaciones

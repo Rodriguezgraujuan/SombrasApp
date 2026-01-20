@@ -45,20 +45,11 @@ fun CharactersScreen(
 
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // Toolbar
-            TopAppBar(
-                title = { Text(text = stringResource(id = R.string.personajes), color = Color(0xFFCDAA45)) },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent,
-                    titleContentColor = Color(0xFFCDAA45)
-                ),
-                modifier = Modifier.fillMaxWidth()
-            )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(12.dp),
+                    .padding(12.dp)
+                    .padding(top = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
