@@ -1,4 +1,8 @@
 package com.example.sombras.utils
 
-class SessionManager {
+import com.example.sombras.data.model.LoginResponse
+
+// Singleton simple
+object SessionManager {
+    var loggedInUser: LoginResponse? = null
 }

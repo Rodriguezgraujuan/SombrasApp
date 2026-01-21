@@ -76,7 +76,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(Routes.Login.route) {
                             LoginScreen(
-                                onLoginClick = {
+                                onLoginSuccess = {
                                     navController.navigate(Routes.Home.route) {
                                         popUpTo(Routes.Login.route) { inclusive = true }
                                     }
