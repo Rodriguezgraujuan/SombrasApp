@@ -62,7 +62,6 @@ fun RegisterScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
         ) {
 
             Image(
