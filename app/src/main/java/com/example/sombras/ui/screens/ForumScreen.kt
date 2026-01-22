@@ -31,7 +31,6 @@ fun ForumScreen(
     onGuiaCombateClick: () -> Unit = {},
     onAgregarAmigoClick: () -> Unit = {},
     onEliminarAmigoClick: () -> Unit = {},
-    navController: NavController
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
 

@@ -7,9 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,6 +29,7 @@ import com.example.sombras.ui.screens.ProfileScreen
 import com.example.sombras.ui.screens.RegisterScreen
 import com.example.sombras.ui.theme.SombrasTheme
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sombras.utils.SessionManager
 
 class MainActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -61,17 +65,47 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize()
                     ) {
                         composable(Routes.Home.route) {
-                            HomeScreen { route ->
-                                navController.navigate(route)
+                            RequireLogin(navController) {
+                                HomeScreen { route ->
+                                    navController.navigate(route)
+                                }
                             }
                         }
 
                         composable(Routes.Profile.route) {
-                            ProfileScreen(
-                                "Juan",
-                                "Novato",
-                                "Me gusta la aventura y la exploración."
-                            )
+                            RequireLogin(navController) {
+                                ProfileScreen("Juan", "Novato", "Me gusta la aventura y la exploración.")
+                            }
+                        }
+
+                        composable(Routes.ClasesRazas.route) {
+                            RequireLogin(navController) {
+                                ClasesRazasScreen()
+                            }
+                        }
+
+                        composable(Routes.Forum.route) {
+                            RequireLogin(navController) {
+                                ForumScreen()
+                            }
+                        }
+
+                        composable(Routes.Mapas.route) {
+                            RequireLogin(navController) {
+                                MapsScreen()
+                            }
+                        }
+
+                        composable(Routes.Character.route) {
+                            RequireLogin(navController) {
+                                CharactersScreen()
+                            }
+                        }
+
+                        composable(Routes.Notificaciones.route) {
+                            RequireLogin(navController) {
+                                NotificationsScreen()
+                            }
                         }
 
                         composable(Routes.Login.route) {
@@ -99,30 +133,27 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
-
-                        composable(Routes.ClasesRazas.route) {
-                            ClasesRazasScreen()
-                        }
-
-                        composable(Routes.Forum.route) {
-                            ForumScreen(navController = navController)
-                        }
-
-                        composable(Routes.Mapas.route) {
-                            MapsScreen()
-                        }
-
-                        composable(Routes.Character.route) {
-                            CharactersScreen()
-                        }
-
-                        composable(Routes.Notificaciones.route) {
-                            NotificationsScreen()
-                        }
                     }
                 }
             }
         }
     }
+
+    @Composable
+    fun RequireLogin(
+        navController: NavController,
+        content: @Composable () -> Unit
+    ) {
+        if (SessionManager.isLoggedIn()) {
+            content()
+        } else {
+            LaunchedEffect(Unit) {
+                navController.navigate(Routes.Login.route) {
+                    popUpTo(0)
+                }
+            }
+        }
+    }
+
 }
 

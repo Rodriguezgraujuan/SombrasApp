@@ -24,6 +24,7 @@ import com.example.sombras.R
 import com.example.sombras.data.model.LoginRequest
 import com.example.sombras.data.model.LoginResponse
 import com.example.sombras.retroflit.RetrofitClient
+import com.example.sombras.utils.SessionManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
@@ -234,11 +235,6 @@ fun LoginScreen(
             }
         }
     }
-}
-
-// Session manager simple
-object SessionManager {
-    var loggedInUser: LoginResponse? = null
 }
 
 // ErrorResponse

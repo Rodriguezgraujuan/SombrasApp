@@ -54,14 +54,15 @@ fun HomeScreen(
 
                 Image(
                     painter = painterResource(id = R.drawable.homeimg),
-                    contentDescription = "Imagen de bienvenida",
+                    contentDescription = "Imagen del logo del juego",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .height(240.dp)
                         .background(Color.LightGray)
-                        .padding(bottom = 16.dp)
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 Text(
                     text = "Bienvenido a la app",
