@@ -66,9 +66,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.Home.route) {
                             RequireLogin(navController) {
-                                HomeScreen { route ->
-                                    navController.navigate(route)
-                                }
+                                HomeScreen(navController)
                             }
                         }
 
