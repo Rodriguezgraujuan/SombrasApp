@@ -29,6 +29,7 @@ import com.example.sombras.ui.screens.ProfileScreen
 import com.example.sombras.ui.screens.RegisterScreen
 import com.example.sombras.ui.theme.SombrasTheme
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sombras.ui.screens.CreateCharacterScreen
 import com.example.sombras.utils.SessionManager
 
 class MainActivity : ComponentActivity() {
@@ -96,7 +97,11 @@ class MainActivity : ComponentActivity() {
 
                         composable(Routes.Character.route) {
                             RequireLogin(navController) {
-                                CharactersScreen()
+                                CharactersScreen(
+                                    onCreateCharacterClick = {
+                                        navController.navigate(Routes.CreateCharacter.route)
+                                    }
+                                )
                             }
                         }
 
@@ -104,6 +109,16 @@ class MainActivity : ComponentActivity() {
                             RequireLogin(navController) {
                                 NotificationsScreen()
                             }
+                        }
+                        composable(Routes.CreateCharacter.route) {
+                            RequireLogin(navController) {
+                            CreateCharacterScreen(
+                                userId = SessionManager.loggedInUser?.id ?: return@RequireLogin, // luego dinámico
+                                onCreated = {
+                                    navController.popBackStack()
+                                }
+                            )
+                                }
                         }
 
                         composable(Routes.Login.route) {

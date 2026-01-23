@@ -12,4 +12,6 @@ sealed class Routes(val route: String) {
     object Character : Routes("personajes")
 
     object Notificaciones : Routes("notificaciones")
+
+    object CreateCharacter : Routes("createcharacter")
 }
