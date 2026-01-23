@@ -5,6 +5,7 @@ import com.example.sombras.data.model.Clase
 import com.example.sombras.data.model.CreateCharacterRequest
 import com.example.sombras.data.model.Raza
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -13,9 +14,6 @@ interface PersonajeApi {
 
     @GET("personajes/publicos")
     suspend fun getPublicos(): List<CharacterResponse>
-
-    @GET("personajes/mios/{userId}")
-    suspend fun getMios(@Path("userId") userId: Long): List<CharacterResponse>
 
     @POST("personajes")
     suspend fun crearPersonaje(
@@ -27,4 +25,13 @@ interface PersonajeApi {
 
     @GET("razas")
     suspend fun getRazas(): List<Raza>
+
+    @GET("personajes/{userId}")
+    suspend fun getMisPersonajes(@Path("userId") userId: Long): List<CharacterResponse>
+
+    @DELETE("personajes/{personajeId}/usuario/{userId}")
+    suspend fun deletePersonaje(
+        @Path("personajeId") personajeId: Long,
+        @Path("userId") userId: Long
+    )
 }

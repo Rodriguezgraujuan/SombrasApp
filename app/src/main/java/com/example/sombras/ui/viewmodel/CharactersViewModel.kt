@@ -14,6 +14,9 @@ class CharactersViewModel(
     private val repository: PersonajesRepository
 ) : ViewModel() {
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     private val _selectedFilter = MutableStateFlow(CharacterFilter.PUBLIC)
     val selectedFilter = _selectedFilter.asStateFlow()
 
@@ -36,15 +39,33 @@ class CharactersViewModel(
 
     private fun loadPublic() {
         viewModelScope.launch {
+            _isLoading.value = true
             _characters.value = repository.getPublicos()
+            _isLoading.value = false
         }
     }
 
     private fun loadMy(userId: Long) {
         viewModelScope.launch {
-            _characters.value = repository.getMios(userId)
+            _isLoading.value = true
+            _characters.value = repository.getMisPersonajes(userId)
+            _isLoading.value = false
         }
     }
+
+    fun deleteCharacter(id: Long, userId: Long) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.deletePersonaje(id, userId)
+
+            if (_selectedFilter.value == CharacterFilter.MY) {
+                loadMy(userId)
+            } else {
+                loadPublic()
+            }
+        }
+    }
+
 }
 
 class CharactersViewModelFactory(

@@ -26,6 +26,9 @@ import com.example.sombras.data.repository.PersonajesRepository
 import com.example.sombras.retroflit.RetrofitClient
 import com.example.sombras.ui.viewmodel.CharactersViewModel
 import com.example.sombras.ui.viewmodel.CharactersViewModelFactory
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import com.example.sombras.utils.SessionManager
 
 enum class CharacterFilter {
     MY, PUBLIC
@@ -34,22 +37,41 @@ enum class CharacterFilter {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharactersScreen(
-    onCreateCharacterClick: () -> Unit = {},
-    onDeleteCharacterClick: () -> Unit = {}
+    onCreateCharacterClick: () -> Unit = {}
 ) {
     var selectedFilter by remember { mutableStateOf(CharacterFilter.PUBLIC) }
 
-    // ViewModel manual
     val api = remember { RetrofitClient.personajeApi }
     val repository = remember { PersonajesRepository(api) }
     val factory = remember { CharactersViewModelFactory(repository) }
     val viewModel: CharactersViewModel = viewModel(factory = factory)
 
-    val characters by viewModel.characters.collectAsState()
+    val charactersState = viewModel.characters.collectAsState()
+    val isLoadingState = viewModel.isLoading.collectAsState()
+    var isLoading = isLoadingState.value
+    var characters by remember { mutableStateOf(listOf<CharacterResponse>()) }
     var expandedCharacterId by remember { mutableStateOf<Long?>(null) }
 
+    // Función normal, no composable
+    fun loadCharacters(filter: CharacterFilter) {
+        isLoading = true
+        characters = emptyList() // limpiar lista antes de cargar
+
+        when (filter) {
+            CharacterFilter.PUBLIC -> viewModel.selectPublic()
+            CharacterFilter.MY -> viewModel.selectMy(userId = 1L)
+        }
+    }
+
+    // Observar cambios en characters del viewModel
+    LaunchedEffect(charactersState.value) {
+        characters = charactersState.value
+        isLoading = false
+    }
+
+    // Carga inicial
     LaunchedEffect(Unit) {
-        viewModel.selectPublic()
+        loadCharacters(selectedFilter)
     }
 
     val selectedColor = Color(0xFFCDAA45)
@@ -80,11 +102,10 @@ fun CharactersScreen(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 Button(
                     onClick = {
                         selectedFilter = CharacterFilter.MY
-                        viewModel.selectMy(userId = 1L) // luego dinámico
+                        loadCharacters(selectedFilter)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedFilter == CharacterFilter.MY) selectedColor else unselectedColor,
@@ -98,7 +119,7 @@ fun CharactersScreen(
                 Button(
                     onClick = {
                         selectedFilter = CharacterFilter.PUBLIC
-                        viewModel.selectPublic()
+                        loadCharacters(selectedFilter)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedFilter == CharacterFilter.PUBLIC) selectedColor else unselectedColor,
@@ -118,40 +139,42 @@ fun CharactersScreen(
                     .fillMaxWidth()
                     .weight(1f)
                     .background(Color(0xFF5C3A21))
-                    .padding(8.dp)
+                    .padding(8.dp),
+                contentAlignment = Alignment.Center
             ) {
-                if (characters.isEmpty()) {
-                    Text(
-                        text = "No hay personajes",
-                        color = Color.White,
-                        modifier = Modifier.align(Alignment.Center)
-                    )
+                if (isLoading) {
+                    Text("Cargando...", color = Color.White)
+                } else if (characters.isEmpty()) {
+                    Text("No hay personajes", color = Color.White)
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(characters, key = { it.id }) { personaje ->
-
                             val isExpanded = expandedCharacterId == personaje.id
-
                             CharacterCard(
                                 personaje = personaje,
                                 expanded = isExpanded,
+                                isMine = selectedFilter == CharacterFilter.MY,
+                                onDelete = {
+                                    isLoading = true
+                                    viewModel.deleteCharacter(personaje.id,
+                                        SessionManager.loggedInUser?.id ?:return@CharacterCard
+                                    ) // tu user real
+                                },
                                 onClick = {
-                                    expandedCharacterId =
-                                        if (isExpanded) null else personaje.id
+                                    expandedCharacterId = if (isExpanded) null else personaje.id
                                 }
                             )
                         }
                     }
-
                 }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Botones Crear / Eliminar
+            // Botón Crear
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -161,18 +184,6 @@ fun CharactersScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = selectedColor)
                 ) {
                     Text(text = stringResource(id = R.string.crear))
-                }
-
-                Spacer(modifier = Modifier.width(8.dp))
-
-                Button(
-                    onClick = onDeleteCharacterClick,
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = unselectedColor,
-                        contentColor = selectedColor
-                    )
-                ) {
-                    Text(text = stringResource(id = R.string.eliminar))
                 }
             }
         }
@@ -195,6 +206,8 @@ fun imageFromName(name: String): Int {
 fun CharacterCard(
     personaje: CharacterResponse,
     expanded: Boolean,
+    isMine: Boolean,
+    onDelete: () -> Unit,
     onClick: () -> Unit
 ) {
     val imageName = personaje.imagen.lowercase().substringBefore(".")
@@ -204,6 +217,8 @@ fun CharacterCard(
         targetValue = if (expanded) 520.dp else 180.dp,
         label = "cardHeight"
     )
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier
@@ -215,54 +230,45 @@ fun CharacterCard(
     ) {
         Box {
 
-            // Imagen de fondo
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = personaje.nombre,
                 contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
                 modifier = Modifier.matchParentSize()
             )
 
-            // Gradiente para legibilidad
             Box(
                 modifier = Modifier
                     .matchParentSize()
                     .background(
                         Brush.verticalGradient(
-                            listOf(
-                                Color.Transparent,
-                                Color.Black.copy(alpha = 0.85f)
-                            )
+                            listOf(Color.Transparent, Color.Black.copy(0.85f))
                         )
                     )
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(14.dp),
+                modifier = Modifier.fillMaxSize().padding(14.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
 
-                // Nombre arriba
-                Column {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
                     Text(
                         "${personaje.nombre} ${personaje.apellido}",
                         color = Color(0xFFFFD700),
                         style = MaterialTheme.typography.titleLarge
                     )
 
-                    if (!expanded) {
-                        Text(
-                            personaje.descripcion,
-                            color = Color.White,
-                            maxLines = 2
-                        )
+                    if (isMine) {
+                        TextButton(onClick = { showDeleteDialog = true }) {
+                            Text("Eliminar", color = Color.Red)
+                        }
                     }
                 }
 
-                // Info expandida abajo
                 if (expanded) {
                     Column {
 
@@ -282,10 +288,7 @@ fun CharacterCard(
 
                         Spacer(Modifier.height(6.dp))
 
-                        Text(
-                            personaje.descripcion,
-                            color = Color.White
-                        )
+                        Text(personaje.descripcion, color = Color.White)
 
                         Spacer(Modifier.height(4.dp))
 
@@ -296,7 +299,29 @@ fun CharacterCard(
             }
         }
     }
+
+    if (showDeleteDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteDialog = false },
+            title = { Text("Eliminar personaje") },
+            text = { Text("¿Eliminar a ${personaje.nombre}?") },
+            confirmButton = {
+                TextButton(onClick = {
+                    onDelete()
+                    showDeleteDialog = false
+                }) {
+                    Text("Eliminar", color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
 }
+
 
 @Composable
 fun StatChip(label: String, value: Int) {
