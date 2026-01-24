@@ -218,8 +218,18 @@ fun LoginScreen(
                     ),
                     enabled = !isLoading
                 ) {
-                    Text(if (isLoading) "Cargando..." else stringResource(id = R.string.iniciar_sesion))
-                }
+                    if (isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.Black,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(id = R.string.iniciar_sesion),
+                            modifier = Modifier.padding(12.dp)
+                        )
+                    }                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 

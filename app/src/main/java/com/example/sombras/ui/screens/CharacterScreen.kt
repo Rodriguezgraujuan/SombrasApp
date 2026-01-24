@@ -263,8 +263,13 @@ fun CharacterCard(
                     )
 
                     if (isMine) {
-                        TextButton(onClick = { showDeleteDialog = true }) {
-                            Text("Eliminar", color = Color.Red)
+                        TextButton(
+                            onClick = { showDeleteDialog = true },
+                            colors = ButtonDefaults.textButtonColors(
+                                containerColor = Color.Red.copy(alpha = 0.9f)
+                            )
+                        ) {
+                            Text("Eliminar", color = Color.Black)
                         }
                     }
                 }
