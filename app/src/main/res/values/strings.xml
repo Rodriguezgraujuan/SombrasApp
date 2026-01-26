@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Sombras Detras Del Trono</string>
-    <string name="fondoDescription">Imagen de fondo de un trono con 5 sombras</string>
+    <string name="fondoDescription">Imagen de fondo de un trono con 4 sombras</string>
     <string name="logo">Logo</string>
     <string name="iniciar_sesion">INICIAR SESIÓN</string>
     <string name="registrate">REGÍSTRATE</string>

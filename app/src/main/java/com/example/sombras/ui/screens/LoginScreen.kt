@@ -80,7 +80,6 @@ fun LoginScreen(
                 modifier = Modifier.fillMaxSize()
             )
 
-            // Contenido scrollable
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -90,15 +89,14 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                Spacer(modifier = Modifier.height(60.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 // Logo
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(id = R.string.logo),
                     modifier = Modifier
-                        .size(150.dp)
-                        .background(Color.LightGray)
+                        .size(300.dp)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

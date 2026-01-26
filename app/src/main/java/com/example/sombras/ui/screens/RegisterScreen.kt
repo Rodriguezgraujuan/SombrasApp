@@ -75,18 +75,18 @@ fun RegisterScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .padding(24.dp),
+                    .padding(24.dp)
+                    .systemBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            )  {
 
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
                 Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    painter = painterResource(id = R.drawable.logo),
                     contentDescription = stringResource(id = R.string.logo),
                     modifier = Modifier
-                        .size(150.dp)
-                        .background(Color.LightGray)
+                        .size(300.dp)
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
