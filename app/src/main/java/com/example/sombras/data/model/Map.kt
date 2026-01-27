@@ -10,16 +10,24 @@ data class MapItem(
 data class MapInfo(
     val name: String,
     val description: String,
+
     val kingdoms: Int? = null,
     val routes: Int? = null,
     val castles: Int? = null,
     val dungeons: Int? = null,
-    val factions: Int? = null
+    val factions: Int? = null,
+
+    val rooms: Int? = null,
+    val floors: Int? = null,
+    val enemies: Int? = null,
+    val treasures: Int? = null,
+    val secrets: Int? = null,
+    val dangerLevel: Int? = null
 )
 
 val maps = listOf(
     MapItem("droshar", R.drawable.droshar),
-    MapItem("escalia", R.drawable.mapcastillosenescalia),
+    MapItem("senescalia", R.drawable.mapcastillosenescalia),
     MapItem("sotano", R.drawable.sotanocastillo),
     MapItem("vaelion", R.drawable.vaelion),
     MapItem("vinland", R.drawable.vinland)
@@ -166,8 +174,59 @@ Droshar es un vasto continente de geografía marcada y contrastes extremos, dond
             castles = 8,
             dungeons = 7,
             factions = 6
-        )
+        ),
 
+        "sotano" to MapInfo(
+            name = "Sótano del Castillo",
+            description = """
+El Sótano del Castillo es una red subterránea de pasillos antiguos, cámaras de almacenamiento olvidadas y túneles excavados en piedra viva.
+
+Fue utilizado originalmente como zona de provisiones y refugio durante asedios, pero con el tiempo se convirtió en un lugar oscuro plagado de criaturas, trampas y secretos.
+
+Actualmente es considerado un lugar extremadamente peligroso para exploradores inexpertos.
+
+**Características del lugar:**
+- Muros de piedra maciza
+- Iluminación casi inexistente
+- Pasadizos estrechos y cámaras ocultas
+- Puertas reforzadas y zonas derrumbadas
+- Antiguos símbolos arcanos grabados en los muros
+""".trimIndent(),
+
+            rooms = 14,
+            floors = 1,
+            enemies = 23,
+            treasures = 6,
+            secrets = 4,
+            dangerLevel = 7
+        ),
+        "senescalia" to MapInfo(
+            name = "Castillo de Senescalia",
+            description = """
+Fortaleza principal del reino y sede del poder político. Sus muros han resistido guerras, traiciones y asedios durante siglos.
+
+**Salas principales:**
+- Sala del trono
+- Gran comedor
+- Biblioteca real
+- Salón noble
+- Habitaciones de invitados
+- Almacenes
+- Pasillos fortificados
+
+**Características:**
+- Vigilancia constante
+- Guardia real
+- Pasadizos secretos
+- Cámaras privadas de la realeza
+""".trimIndent(),
+            rooms = 12,
+            floors = 2,
+            enemies = 8,
+            treasures = 5,
+            secrets = 3,
+            dangerLevel = 4
+        )
 
     )
 

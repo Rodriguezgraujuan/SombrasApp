@@ -109,6 +109,8 @@ fun MapsScreen() {
 @Composable
 fun MapInfoSection(info: MapInfo) {
 
+    val isDungeon = info.rooms != null || info.floors != null
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -127,15 +129,28 @@ fun MapInfoSection(info: MapInfo) {
             )
 
             Spacer(Modifier.height(6.dp))
+
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                info.kingdoms?.let { StatChipMap("👑 Reinos", it) }
-                info.routes?.let { StatChipMap("🛣 Rutas", it) }
-                info.castles?.let { StatChipMap("🏰 Castillos", it) }
-                info.dungeons?.let { StatChipMap("🕳 Sótanos", it) }
-                info.factions?.let { StatChipMap("🛡 Facciones", it) }
+
+                if (!isDungeon) {
+                    // 🌍 Mapas grandes
+                    info.kingdoms?.let { StatChipMap("👑 Reinos", it) }
+                    info.routes?.let { StatChipMap("🛣 Rutas", it) }
+                    info.castles?.let { StatChipMap("🏰 Castillos", it) }
+                    info.dungeons?.let { StatChipMap("🕳 Mazmorras", it) }
+                    info.factions?.let { StatChipMap("🛡 Facciones", it) }
+                } else {
+                    // 🏰 Mazmorras / interiores
+                    info.rooms?.let { StatChipMap("🚪 Salas", it) }
+                    info.floors?.let { StatChipMap("🏗 Pisos", it) }
+                    info.enemies?.let { StatChipMap("👹 Enemigos", it) }
+                    info.treasures?.let { StatChipMap("💰 Tesoros", it) }
+                    info.secrets?.let { StatChipMap("🗝 Secretos", it) }
+                    info.dangerLevel?.let { StatChipMap("☠ Peligro", it) }
+                }
             }
 
             Spacer(Modifier.height(12.dp))
@@ -148,6 +163,7 @@ fun MapInfoSection(info: MapInfo) {
         }
     }
 }
+
 
 @Composable
 fun StatChipMap(label: String, value: Int) {
