@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sombras.R
 import com.example.sombras.data.model.CharacterResponse
+import com.example.sombras.data.model.UpdateProfileRequest
 import com.example.sombras.data.model.UserProfileResponse
 import com.example.sombras.retroflit.RetrofitClient
 import com.example.sombras.utils.SessionManager
@@ -32,7 +33,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun ProfileScreen(
     onLogout: () -> Unit,
-    onEditProfile: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -40,6 +40,8 @@ fun ProfileScreen(
     var profile by remember { mutableStateOf<UserProfileResponse?>(null) }
     var myCharacters by remember { mutableStateOf<List<CharacterResponse>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
+
+    var isEditing by remember { mutableStateOf(false) }
 
     val buttonColor = Color(0xFF5C3A21)
     val textButtonColor = Color(0xFFCDAA45)
@@ -92,6 +94,7 @@ fun ProfileScreen(
                 }
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier = Modifier.height(20.dp))
                     Text(
                         text = profile!!.username,
                         color = Color(0xFFCDAA45),
@@ -105,8 +108,6 @@ fun ProfileScreen(
                         fontSize = 14.sp
                     )
                 }
-
-                Section("Descripción", profile!!.descripcion)
 
                 Section(
                     "Datos",
@@ -137,7 +138,7 @@ fun ProfileScreen(
                 }
 
                 Button(
-                    onClick = onEditProfile,
+                    onClick = { isEditing = true },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(buttonColor, textButtonColor)
                 ) {
@@ -155,6 +156,35 @@ fun ProfileScreen(
                     colors = ButtonDefaults.buttonColors(buttonColor, textButtonColor)
                 ) {
                     Text("Cerrar sesión")
+                }
+                if (isEditing && profile != null) {
+                    EditProfileDialog(
+                        profile = profile!!,
+                        onSave = { newUsername, newDesc ->
+                            scope.launch {
+                                try {
+                                    val request = UpdateProfileRequest().apply {
+                                        username = newUsername
+                                        descripcion = newDesc
+                                    }
+
+                                    val updatedProfile =
+                                        RetrofitClient.usuarioApi.updateProfile(
+                                            profile!!.id,
+                                            request
+                                        )
+
+                                    profile = updatedProfile
+                                    showSnack("Perfil actualizado ✨")
+                                    isEditing = false
+
+                                } catch (e: Exception) {
+                                    showSnack("Error al actualizar perfil 😭")
+                                }
+                            }
+                        },
+                        onDismiss = { isEditing = false }
+                    )
                 }
             }
         }
@@ -186,9 +216,104 @@ fun Section(title: String, content: String) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditProfileDialog(
+    profile: UserProfileResponse,
+    onSave: (String, String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    var username by remember { mutableStateOf(profile.username) }
+    var descripcion by remember { mutableStateOf(profile.descripcion) }
+
+    val gold = Color(0xFFCDAA45)
+    val brown = Color(0xFF5C3A21)
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        containerColor = Color(0xFF5C3A21),
+        title = {
+            Text(
+                "Editar perfil",
+                color = Color(0xFFCDAA45),
+                fontWeight = FontWeight.Bold
+            )
+        },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+
+                OutlinedTextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Nombre de usuario") },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = brown,
+                        unfocusedContainerColor = brown,
+                        disabledContainerColor = brown,
+
+                        focusedBorderColor = gold,
+                        unfocusedBorderColor = gold.copy(alpha = 0.6f),
+
+                        focusedLabelColor = gold,
+                        unfocusedLabelColor = gold.copy(alpha = 0.7f),
+
+                        cursorColor = gold,
+                        focusedTextColor = gold,
+                        unfocusedTextColor = gold
+                    )
+                )
+
+                OutlinedTextField(
+                    value = descripcion,
+                    onValueChange = { descripcion = it },
+                    label = { Text("Descripción") },
+                    modifier = Modifier.fillMaxWidth(),
+                    maxLines = 3,
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = brown,
+                        unfocusedContainerColor = brown,
+                        disabledContainerColor = brown,
+
+                        focusedBorderColor = gold,
+                        unfocusedBorderColor = gold.copy(alpha = 0.6f),
+
+                        focusedLabelColor = gold,
+                        unfocusedLabelColor = gold.copy(alpha = 0.7f),
+
+                        cursorColor = gold,
+                        focusedTextColor = gold,
+                        unfocusedTextColor = gold
+                    )
+                )
+
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = { onSave(username, descripcion) },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFCDAA45),
+                    contentColor = Color.Black
+                )
+            ) {
+                Text("Guardar")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar", color = Color.White)
+            }
+        }
+    )
+}
+
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun ProfileScreenPreview() {
-    ProfileScreen(onLogout = {}, onEditProfile = {})
+    ProfileScreen(onLogout = {})
 }

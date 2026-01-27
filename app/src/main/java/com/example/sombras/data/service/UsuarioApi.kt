@@ -17,6 +17,6 @@ interface UsuarioApi {
     suspend fun updateProfile(
         @Path("id") id: Long,
         @Body request: UpdateProfileRequest
-    )
+    ): UserProfileResponse
 
 }

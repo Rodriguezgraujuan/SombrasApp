@@ -1,10 +1,12 @@
 package com.example.sombras
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ import com.example.sombras.ui.screens.CreateCharacterScreen
 import com.example.sombras.utils.SessionManager
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,10 +80,7 @@ class MainActivity : ComponentActivity() {
                                     navController.navigate("login") {
                                         popUpTo("profile") { inclusive = true }
                                     }
-                                },
-                                    onEditProfile = {
-                                        navController.navigate("edit_profile")
-                                    })
+                                })
                             }
                         }
 
