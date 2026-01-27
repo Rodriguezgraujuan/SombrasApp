@@ -63,13 +63,11 @@ fun CharactersScreen(
         }
     }
 
-    // Observar cambios en characters del viewModel
     LaunchedEffect(charactersState.value) {
         characters = charactersState.value
         isLoading = false
     }
 
-    // Carga inicial
     LaunchedEffect(Unit) {
         loadCharacters(selectedFilter)
     }
@@ -97,7 +95,6 @@ fun CharactersScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Filtros
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -133,7 +130,6 @@ fun CharactersScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Lista de personajes
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -174,7 +170,6 @@ fun CharactersScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Botón Crear
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically

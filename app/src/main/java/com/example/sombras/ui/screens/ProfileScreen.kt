@@ -19,16 +19,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sombras.R
+import com.example.sombras.data.model.CharacterResponse
 import com.example.sombras.data.model.UserProfileResponse
 import com.example.sombras.retroflit.RetrofitClient
 import com.example.sombras.utils.SessionManager
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,43 +38,31 @@ fun ProfileScreen(
     val scope = rememberCoroutineScope()
 
     var profile by remember { mutableStateOf<UserProfileResponse?>(null) }
+    var myCharacters by remember { mutableStateOf<List<CharacterResponse>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
 
     val buttonColor = Color(0xFF5C3A21)
     val textButtonColor = Color(0xFFCDAA45)
 
-
     fun showSnack(msg: String) {
         scope.launch { snackbarHostState.showSnackbar(msg) }
     }
 
-    // Cargar perfil al iniciar
     LaunchedEffect(Unit) {
         val userId = SessionManager.userId ?: return@LaunchedEffect
-        RetrofitClient.usuarioApi.getProfile(userId)
-            .enqueue(object : Callback<UserProfileResponse> {
-                override fun onResponse(
-                    call: Call<UserProfileResponse>,
-                    response: Response<UserProfileResponse>
-                ) {
-                    isLoading = false
-                    if (response.isSuccessful) {
-                        profile = response.body()
-                    } else {
-                        showSnack("Error al cargar perfil")
-                    }
-                }
 
-                override fun onFailure(call: Call<UserProfileResponse>, t: Throwable) {
-                    isLoading = false
-                    showSnack("Error de conexión")
-                }
-            })
+        try {
+            profile = RetrofitClient.usuarioApi.getProfile(userId)
+            myCharacters = RetrofitClient.personajeApi.getMisPersonajes(userId)
+        } catch (e: Exception) {
+            showSnack("Error al cargar perfil")
+        } finally {
+            isLoading = false
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -96,48 +81,65 @@ fun ProfileScreen(
         ) {
 
             if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                CircularProgressIndicator()
             } else if (profile != null) {
-                val rawDate = profile!!.fechaCreacion
-                val formatterInput = DateTimeFormatter.ISO_DATE_TIME
-                val formatterOutput = DateTimeFormatter.ofPattern("dd/MM/yyyy")
 
                 val formattedDate = try {
-                    val date = LocalDateTime.parse(rawDate, formatterInput)
-                    date.format(formatterOutput)
+                    val date = LocalDateTime.parse(profile!!.fechaCreacion, DateTimeFormatter.ISO_DATE_TIME)
+                    date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                 } catch (e: Exception) {
-                    rawDate // si hay error, muestra la fecha tal cual
+                    profile!!.fechaCreacion
                 }
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                ) {
+
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         text = profile!!.username,
                         color = Color(0xFFCDAA45),
                         fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(top = 8.dp)
+                        fontWeight = FontWeight.Bold
                     )
 
                     Text(
                         text = profile!!.descripcion.ifBlank { "Sin descripción" },
                         color = Color(0xFFCDAA45).copy(alpha = 0.8f),
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(top = 2.dp)
+                        fontSize = 14.sp
                     )
                 }
 
+                Section("Descripción", profile!!.descripcion)
+
                 Section(
-                    title = "Datos",
-                    content = "Email: ${profile!!.email}\nFecha creación: $formattedDate"
+                    "Datos",
+                    "Email: ${profile!!.email}\nFecha creación: $formattedDate"
                 )
-                Section(title = "Personajes", content = "Personajes creados: ${profile!!.totalPersonajes}")
+
+                Section(
+                    "Personajes",
+                    "Personajes creados: ${profile!!.totalPersonajes}"
+                )
+
+                // ===== Actividad reciente =====
+                val lastCharacter = myCharacters.maxByOrNull { it.id }
+
+                if (lastCharacter != null) {
+                    Section(
+                        "Actividad reciente, ultimo personaje creado",
+                        "Nombre: ${lastCharacter.nombre} ${lastCharacter.apellido}\n" +
+                                "Clase: ${lastCharacter.clase.nombre}\n" +
+                                "Raza: ${lastCharacter.raza.name}\n" +
+                                "Nivel: ${lastCharacter.nivel}"
+                    )
+                } else {
+                    Section(
+                        "Actividad reciente",
+                        "Aún no has creado personajes."
+                    )
+                }
 
                 Button(
                     onClick = onEditProfile,
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor, contentColor = textButtonColor)
+                    colors = ButtonDefaults.buttonColors(buttonColor, textButtonColor)
                 ) {
                     Text("Editar perfil")
                 }
@@ -150,7 +152,7 @@ fun ProfileScreen(
                         onLogout()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(containerColor = buttonColor, contentColor = textButtonColor)
+                    colors = ButtonDefaults.buttonColors(buttonColor, textButtonColor)
                 ) {
                     Text("Cerrar sesión")
                 }
@@ -170,8 +172,7 @@ fun Section(title: String, content: String) {
             text = title,
             color = Color(0xFFCDAA45),
             fontSize = 16.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 6.dp)
+            fontWeight = FontWeight.Bold
         )
 
         Box(
@@ -180,11 +181,7 @@ fun Section(title: String, content: String) {
                 .background(Color(0xFF5C3A21))
                 .padding(12.dp)
         ) {
-            Text(
-                text = content,
-                color = Color.White,
-                fontSize = 14.sp
-            )
+            Text(text = content, color = Color.White, fontSize = 14.sp)
         }
     }
 }
