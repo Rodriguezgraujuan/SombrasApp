@@ -1,16 +1,16 @@
 package com.example.sombras.utils
 
-import com.example.sombras.data.model.LoginResponse
-
-// Singleton simple
 object SessionManager {
-    var loggedInUser: LoginResponse? = null
+    var userId: Long? = null
+    var username: String? = null
+    var email: String? = null
 
-    fun isLoggedIn(): Boolean {
-        return loggedInUser != null
-    }
+    fun isLoggedIn() = userId != null
 
     fun logout() {
-        loggedInUser = null
+        userId = null
+        username = null
+        email = null
     }
 }
+

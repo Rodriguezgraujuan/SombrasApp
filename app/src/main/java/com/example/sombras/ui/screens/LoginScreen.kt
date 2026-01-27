@@ -189,7 +189,12 @@ fun LoginScreen(
                                 ) {
                                     isLoading = false
                                     if (response.isSuccessful) {
-                                        SessionManager.loggedInUser = response.body()
+                                        val user = response.body()!!
+
+                                        SessionManager.userId = user.id
+                                        SessionManager.username = user.username
+                                        SessionManager.email = user.email
+
                                         showSnack("Login correcto 🎉")
                                         onLoginSuccess()
                                     } else {

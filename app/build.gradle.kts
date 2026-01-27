@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.36.0")
     implementation("androidx.compose.material:material-icons-extended:1.5.0") // ajusta versión a tu Compose
+    implementation("androidx.compose.foundation:foundation:1.5.4")
 
     //Navigation
     implementation("androidx.navigation:navigation-compose:2.7.5")

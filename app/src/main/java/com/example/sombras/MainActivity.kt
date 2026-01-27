@@ -73,7 +73,14 @@ class MainActivity : ComponentActivity() {
 
                         composable(Routes.Profile.route) {
                             RequireLogin(navController) {
-                                ProfileScreen("Juan", "Novato", "Me gusta la aventura y la exploración.")
+                                ProfileScreen(onLogout = {
+                                    navController.navigate("login") {
+                                        popUpTo("profile") { inclusive = true }
+                                    }
+                                },
+                                    onEditProfile = {
+                                        navController.navigate("edit_profile")
+                                    })
                             }
                         }
 
@@ -113,7 +120,7 @@ class MainActivity : ComponentActivity() {
                         composable(Routes.CreateCharacter.route) {
                             RequireLogin(navController) {
                             CreateCharacterScreen(
-                                userId = SessionManager.loggedInUser?.id ?: return@RequireLogin, // luego dinámico
+                                userId = SessionManager.userId?: return@RequireLogin,
                                 onCreated = {
                                     navController.popBackStack()
                                 }

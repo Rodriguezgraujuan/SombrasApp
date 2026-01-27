@@ -59,7 +59,7 @@ fun CharactersScreen(
 
         when (filter) {
             CharacterFilter.PUBLIC -> viewModel.selectPublic()
-            CharacterFilter.MY -> viewModel.selectMy(userId = 1L)
+            CharacterFilter.MY -> viewModel.selectMy(userId = SessionManager.userId?:return)
         }
     }
 
@@ -160,7 +160,7 @@ fun CharactersScreen(
                                 onDelete = {
                                     isLoading = true
                                     viewModel.deleteCharacter(personaje.id,
-                                        SessionManager.loggedInUser?.id ?:return@CharacterCard
+                                        SessionManager.userId?:return@CharacterCard
                                     ) // tu user real
                                 },
                                 onClick = {

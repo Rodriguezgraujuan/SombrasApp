@@ -2,6 +2,7 @@ package com.example.sombras.retroflit
 
 import com.example.sombras.data.service.ApiService
 import com.example.sombras.data.service.PersonajeApi
+import com.example.sombras.data.service.UsuarioApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -37,5 +38,9 @@ object RetrofitClient {
     // Servicios
     val personajeApi: PersonajeApi by lazy {
         retrofit.create(PersonajeApi::class.java)
+    }
+
+    val usuarioApi: UsuarioApi by lazy {
+        retrofit.create(UsuarioApi::class.java)
     }
 }
