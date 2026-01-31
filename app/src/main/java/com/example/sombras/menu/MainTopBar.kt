@@ -60,11 +60,6 @@ fun MainTopAppBar(
                         contentDescription = "Perfil",
                         tint = Color(0xFFE2B646))
                 }
-                IconButton(onClick = { onNavClick("notificaciones") }) {
-                    Icon(painter = painterResource(id = R.drawable.ic_notificacion),
-                        contentDescription = "Notificaciones",
-                        tint = Color(0xFFE2B646))
-                }
             }
         },
         modifier = Modifier.height(56.dp)

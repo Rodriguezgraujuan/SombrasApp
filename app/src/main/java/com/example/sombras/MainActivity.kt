@@ -26,12 +26,23 @@ import com.example.sombras.ui.screens.ForumScreen
 import com.example.sombras.ui.screens.HomeScreen
 import com.example.sombras.ui.screens.LoginScreen
 import com.example.sombras.ui.screens.MapsScreen
-import com.example.sombras.ui.screens.NotificationsScreen
 import com.example.sombras.ui.screens.ProfileScreen
 import com.example.sombras.ui.screens.RegisterScreen
 import com.example.sombras.ui.theme.SombrasTheme
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.sombras.ui.screens.AventurasScreen
+import com.example.sombras.ui.screens.BestiarioScreen
+import com.example.sombras.ui.screens.ClasesBuildsScreen
+import com.example.sombras.ui.screens.CombateScreen
 import com.example.sombras.ui.screens.CreateCharacterScreen
+import com.example.sombras.ui.screens.DadosScreen
+import com.example.sombras.ui.screens.GuiaJugadorScreen
+import com.example.sombras.ui.screens.GuiaMasterScreen
+import com.example.sombras.ui.screens.LoreScreen
+import com.example.sombras.ui.screens.MagiaScreen
+import com.example.sombras.ui.screens.MapasLocalizacionesScreen
+import com.example.sombras.ui.screens.ObjetosScreen
+import com.example.sombras.ui.screens.ReglasBasicasScreen
 import com.example.sombras.utils.SessionManager
 
 class MainActivity : ComponentActivity() {
@@ -92,7 +103,22 @@ class MainActivity : ComponentActivity() {
 
                         composable(Routes.Forum.route) {
                             RequireLogin(navController) {
-                                ForumScreen()
+                                ForumScreen(
+                                    onGuiaJugadorClick = { navController.navigate(Routes.GuiaJugador.route) },
+                                    onClasesBuildsClick = { navController.navigate(Routes.ClasesBuilds.route) },
+                                    onObjetosClick = { navController.navigate(Routes.Objetos.route) },
+                                    onLoreClick = { navController.navigate(Routes.Lore.route) },
+
+                                    onGuiaMasterClick = { navController.navigate(Routes.GuiaMaster.route) },
+                                    onAventurasClick = { navController.navigate(Routes.Aventuras.route) },
+                                    onBestiarioClick = { navController.navigate(Routes.Bestiario.route) },
+                                    onMapasClick = { navController.navigate(Routes.MapasLocalizaciones.route) },
+
+                                    onReglasBasicasClick = { navController.navigate(Routes.ReglasBasicas.route) },
+                                    onCombateClick = { navController.navigate(Routes.Combate.route) },
+                                    onMagiaClick = { navController.navigate(Routes.MagiaHabilidades.route) },
+                                    onDadosClick = { navController.navigate(Routes.Dados.route) }
+                                )
                             }
                         }
 
@@ -109,12 +135,6 @@ class MainActivity : ComponentActivity() {
                                         navController.navigate(Routes.CreateCharacter.route)
                                     }
                                 )
-                            }
-                        }
-
-                        composable(Routes.Notificaciones.route) {
-                            RequireLogin(navController) {
-                                NotificationsScreen()
                             }
                         }
                         composable(Routes.CreateCharacter.route) {
@@ -153,6 +173,55 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+
+                        composable(Routes.GuiaJugador.route) {
+                            RequireLogin(navController) { GuiaJugadorScreen() }
+                        }
+
+                        composable(Routes.GuiaMaster.route) {
+                            RequireLogin(navController) { GuiaMasterScreen() }
+                        }
+
+                        composable(Routes.ReglasBasicas.route) {
+                            RequireLogin(navController) { ReglasBasicasScreen() }
+                        }
+
+                        composable(Routes.ClasesBuilds.route) {
+                            RequireLogin(navController) { ClasesBuildsScreen() }
+                        }
+
+                        composable(Routes.Objetos.route) {
+                            RequireLogin(navController) { ObjetosScreen() }
+                        }
+
+                        composable(Routes.Lore.route) {
+                            RequireLogin(navController) { LoreScreen() }
+                        }
+
+                        composable(Routes.Aventuras.route) {
+                            RequireLogin(navController) { AventurasScreen() }
+                        }
+
+                        composable(Routes.Bestiario.route) {
+                            RequireLogin(navController) { BestiarioScreen() }
+                        }
+
+                        composable(Routes.MapasLocalizaciones.route) {
+                            RequireLogin(navController) { MapasLocalizacionesScreen() }
+                        }
+
+                        composable(Routes.Combate.route) {
+                            RequireLogin(navController) { CombateScreen() }
+                        }
+
+                        composable(Routes.MagiaHabilidades.route) {
+                            RequireLogin(navController) { MagiaScreen() }
+                        }
+
+                        composable(Routes.Dados.route) {
+                            RequireLogin(navController) { DadosScreen() }
+                        }
+
                     }
                 }
             }
