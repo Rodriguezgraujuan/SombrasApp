@@ -9,16 +9,17 @@ fun MapasLocalizacionesScreen() {
         sections = listOf(
 
             "Regiones" to
-                    "El mundo se divide en regiones con culturas y peligros distintos.",
+                    "Cada región posee su propia cultura, peligros y conflictos. Viajar entre ellas implica cambios tanto narrativos como mecánicos.",
 
             "Ciudades" to
-                    "Centros de poder, comercio e intriga.",
+                    "Las ciudades son centros de intriga, comercio y poder. Aquí se tejen alianzas, traiciones y oportunidades ocultas.",
 
             "Mazmorras" to
-                    "Lugares cerrados llenos de trampas y secretos.",
+                    "Ruinas, fortalezas y lugares olvidados guardan tesoros y horrores. La exploración siempre implica riesgo.",
 
             "Exploración" to
-                    "El entorno puede ser tan peligroso como los enemigos."
+                    "El entorno influye en el juego. El clima, la visibilidad y los recursos disponibles pueden convertir un viaje simple en una prueba de supervivencia."
         )
     )
 }
+

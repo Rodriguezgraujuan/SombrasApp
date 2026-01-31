@@ -9,16 +9,16 @@ fun MagiaScreen() {
         sections = listOf(
 
             "Tipos de magia" to
-                    "Existen diversas escuelas mágicas, cada una con su propio estilo, riesgos y efectos narrativos.",
+                    "La magia adopta distintas formas según su origen. Algunas escuelas son aceptadas, mientras que otras se consideran peligrosas o prohibidas.",
 
             "Costo mágico" to
-                    "Lanzar hechizos consume energía. El abuso de la magia puede provocar agotamiento o consecuencias imprevisibles.",
+                    "Lanzar hechizos consume energía y puede dejar secuelas. Forzar la magia más allá de los límites personales suele tener consecuencias.",
 
             "Habilidades especiales" to
-                    "Las habilidades no mágicas representan talentos únicos, técnicas de combate o conocimientos avanzados.",
+                    "Las habilidades no mágicas representan entrenamiento, talento o conocimientos únicos que permiten destacar sin recurrir a la magia.",
 
             "Fallos críticos" to
-                    "Un fallo al usar magia puede causar efectos inesperados que alteren la escena o la historia."
+                    "Cuando la magia falla, el resultado puede ser imprevisible. Estos momentos suelen alterar la escena y empujar la historia en nuevas direcciones."
         )
     )
 }

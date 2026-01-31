@@ -9,16 +9,17 @@ fun ClasesBuildsScreen() {
         sections = listOf(
 
             "Clases" to
-                    "Cada clase define el estilo de juego del personaje, sus habilidades principales y su rol dentro del grupo.",
+                    "Cada clase define el enfoque principal del personaje: combate, sigilo, magia o apoyo. También marca su forma de resolver problemas y su papel dentro del grupo.",
 
             "Builds" to
-                    "Una build es una combinación de habilidades, talentos y equipo enfocada a un objetivo concreto.",
+                    "Una build es la especialización del personaje a lo largo del tiempo. Elegir ciertas habilidades y talentos permite reforzar un estilo de juego concreto o cubrir debilidades del grupo.",
 
             "Sinergias" to
-                    "Algunas clases funcionan mejor juntas, creando estrategias más eficaces en combate y exploración.",
+                    "Algunas clases funcionan especialmente bien juntas. Combinar habilidades de forma estratégica puede marcar la diferencia entre una victoria costosa y una derrota segura.",
 
             "Evolución" to
-                    "A medida que avanzas, puedes especializarte o diversificar tus capacidades."
+                    "Con el avance de la historia, los personajes cambian. Nuevas habilidades, decisiones narrativas y experiencias moldean su crecimiento y personalidad."
         )
     )
 }
+

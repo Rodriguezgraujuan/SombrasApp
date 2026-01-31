@@ -9,16 +9,17 @@ fun DadosScreen() {
         sections = listOf(
 
             "Dado principal" to
-                    "El dado principal del sistema es el d20, usado para la mayoría de acciones importantes.",
+                    "El d20 es el núcleo del sistema y se utiliza para resolver acciones importantes. Representa la incertidumbre y el riesgo de cada decisión.",
 
             "Modificadores" to
-                    "Las características, habilidades y equipo alteran el resultado final de las tiradas.",
+                    "Las características, habilidades, equipo y circunstancias alteran el resultado final de una tirada, reflejando la preparación y experiencia del personaje.",
 
             "Éxito crítico" to
-                    "Un resultado excepcional puede otorgar beneficios adicionales o efectos narrativos positivos.",
+                    "Un éxito excepcional no solo asegura la acción, sino que puede generar beneficios adicionales, ventajas futuras o momentos memorables.",
 
             "Fallo crítico" to
-                    "Un fallo extremo no solo implica fracaso, sino también complicaciones o peligros adicionales."
+                    "Un fallo extremo implica consecuencias inesperadas. No siempre es un desastre inmediato, pero sí un giro que complica la situación."
         )
     )
 }
+

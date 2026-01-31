@@ -9,16 +9,17 @@ fun ObjetosScreen() {
         sections = listOf(
 
             "Armas" to
-                    "Las armas determinan el tipo de daño y las acciones disponibles en combate.",
+                    "Las armas definen el estilo de combate del personaje. Algunas priorizan el daño directo, otras la velocidad o el control del enemigo.",
 
             "Armaduras" to
-                    "La armadura reduce el daño recibido y puede afectar la movilidad del personaje.",
+                    "La armadura ofrece protección a costa de movilidad o sigilo. Elegir la adecuada puede marcar la diferencia entre resistir un golpe o caer.",
 
             "Objetos especiales" to
-                    "Reliquias, artefactos y objetos únicos poseen efectos narrativos y mecánicos.",
+                    "Reliquias y artefactos poseen efectos únicos y, en muchos casos, implicaciones narrativas que van más allá de sus estadísticas.",
 
             "Gestión de equipo" to
-                    "El peso y la disponibilidad del equipo influyen en la exploración."
+                    "El peso, la durabilidad y la disponibilidad del equipo influyen en la exploración y la toma de decisiones."
         )
     )
 }
+

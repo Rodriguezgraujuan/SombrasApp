@@ -9,16 +9,17 @@ fun LoreScreen() {
         sections = listOf(
 
             "El Reino" to
-                    "Sombras detrás del trono se desarrolla en un reino marcado por intrigas políticas y secretos antiguos.",
+                    "El mundo de Sombras detrás del trono está marcado por intrigas políticas, traiciones silenciosas y un poder que rara vez se muestra a la luz.",
 
             "Facciones" to
-                    "Nobles, gremios y cultos compiten por el poder en las sombras.",
+                    "Nobles, reinos, gremios, órdenes religiosas y cultos ocultos luchan por influencia. Cada facción tiene objetivos propios y secretos que proteger.",
 
             "Historia antigua" to
-                    "Viejas guerras y pactos olvidados aún influyen en el presente.",
+                    "Guerras pasadas, pactos prohibidos y reinos caídos aún proyectan su sombra sobre el presente, influyendo en eventos actuales.",
 
             "Tono del mundo" to
-                    "El mundo es oscuro, moralmente ambiguo y peligroso."
+                    "El mundo es oscuro y moralmente ambiguo. Las decisiones rara vez son simples, y toda elección tiene un precio."
         )
     )
 }
+
