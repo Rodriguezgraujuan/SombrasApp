@@ -2,7 +2,6 @@ package com.example.sombras.ui.screens
 
 import android.util.Patterns
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -189,7 +188,7 @@ fun RegisterScreen(
                                                         showSnack("❌ Error desconocido ❌")
                                                     }
 
-                                                } catch (e: Exception) {
+                                                } catch (_: Exception) {
                                                     showSnack("Error procesando respuesta del servidor")
                                                 }
                                             }
@@ -227,12 +226,21 @@ fun RegisterScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = stringResource(id = R.string.ya_tienes_cuenta_inicia_sesi_n),
-                    fontSize = 14.sp,
-                    color = Color.White,
-                    modifier = Modifier.clickable { onLoginClick() }
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "¿Ya tienes cuenta? ",
+                        fontSize = 14.sp,
+                        color = Color.White
+                    )
+                    Text(
+                        text = "Inicia sesión",
+                        fontSize = 14.sp,
+                        color = Color(0xFFE2B646),
+                        modifier = Modifier.clickable { onLoginClick() }
+                    )
+                }
             }
         }
     }

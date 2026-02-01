@@ -1,7 +1,6 @@
 package com.example.sombras.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -202,7 +201,7 @@ fun LoginScreen(
                                         try {
                                             val error = Gson().fromJson(errorBody, ErrorResponse::class.java)
                                             showSnack(error.message)
-                                        } catch (e: Exception) {
+                                        } catch (_: Exception) {
                                             showSnack("Error desconocido")
                                         }
                                     }
@@ -237,12 +236,19 @@ fun LoginScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Register link
-                Text(
-                    text = stringResource(id = R.string.no_tienes_cuenta_reg_strate),
-                    fontSize = 14.sp,
-                    color = Color.White,
-                    modifier = Modifier.clickable { onRegisterClick() }
-                )
+                Row {
+                    Text(
+                        text = "¿No tienes cuenta? ",
+                        color = Color.White,
+                        fontSize = 14.sp
+                    )
+                    Text(
+                        text = "Regístrate",
+                        color = Color(0xFFE2B646),
+                        fontSize = 14.sp,
+                        modifier = Modifier.clickable { onRegisterClick() }
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(40.dp))
             }
