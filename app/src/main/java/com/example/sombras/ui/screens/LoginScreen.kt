@@ -180,7 +180,7 @@ fun LoginScreen(
                         isLoading = true
 
                         val request = LoginRequest(email, password)
-                        RetrofitClient.api.loginUser(request)
+                        RetrofitClient.apiService.loginUser(request)
                             .enqueue(object : Callback<LoginResponse> {
                                 override fun onResponse(
                                     call: Call<LoginResponse>,

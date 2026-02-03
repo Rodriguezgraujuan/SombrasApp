@@ -160,7 +160,7 @@ fun RegisterScreen(
 
                                 val request = RegisterRequest(username, email, password)
 
-                                RetrofitClient.api.registerUser(request)
+                                RetrofitClient.apiService.registerUser(request)
                                     .enqueue(object : Callback<RegisterResponse> {
 
                                         override fun onResponse(
