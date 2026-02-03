@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient {
 
     private const val BASE_URL =
-        "http://ec2-98-92-38-79.compute-1.amazonaws.com:8080/"
+        "http://3.93.117.159:8080/"
 
     private val logging = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
