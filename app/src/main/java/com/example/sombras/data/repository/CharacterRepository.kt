@@ -1,6 +1,8 @@
 package com.example.sombras.data.repository
 
+import com.example.sombras.data.model.CharacterResponse
 import com.example.sombras.data.model.CreateCharacterRequest
+import com.example.sombras.data.model.UpdateCharacterRequest
 import com.example.sombras.data.service.PersonajeApi
 
 class PersonajesRepository(private val api: PersonajeApi) {
@@ -19,4 +21,14 @@ class PersonajesRepository(private val api: PersonajeApi) {
 
     suspend fun deletePersonaje(id: Long, userId: Long) =
         api.deletePersonaje(id, userId)
+
+    suspend fun updateCharacter(
+        personajeId: Long,
+        userId: Long,
+        request: UpdateCharacterRequest
+    ): CharacterResponse {
+        return api.updatePersonaje(personajeId, userId, request)
+    }
+
+
 }

@@ -25,4 +25,9 @@ sealed class Routes(val route: String) {
     object Combate : Routes("combate")
     object MagiaHabilidades : Routes("magia_habilidades")
     object Dados : Routes("dados")
+
+    object EditCharacter : Routes("editCharacter/{personajeId}") {
+        fun create(personajeId: Long) = "editCharacter/$personajeId"
+    }
+
 }

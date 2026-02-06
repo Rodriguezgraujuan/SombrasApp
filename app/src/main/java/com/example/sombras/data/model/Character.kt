@@ -34,3 +34,15 @@ data class CharacterResponse(
     val clase: Clase,
     val raza: Raza
 )
+
+data class UpdateCharacterRequest(
+    val nombre: String,
+    val apellido: String,
+    val descripcion: String,
+    val nivel: Int,
+    val inteligencia: Int,
+    val fuerza: Int,
+    val destreza: Int,
+    val constitucion: Int,
+    val sabiduria: Int
+)

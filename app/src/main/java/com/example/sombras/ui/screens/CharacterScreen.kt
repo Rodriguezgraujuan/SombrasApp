@@ -28,6 +28,7 @@ import com.example.sombras.ui.viewmodel.CharactersViewModel
 import com.example.sombras.ui.viewmodel.CharactersViewModelFactory
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import com.example.sombras.ui.navigation.Routes
 import com.example.sombras.utils.SessionManager
 
 enum class CharacterFilter {
@@ -37,7 +38,8 @@ enum class CharacterFilter {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CharactersScreen(
-    onCreateCharacterClick: () -> Unit = {}
+    onCreateCharacterClick: () -> Unit = {},
+    onEditCharacter: (Long) -> Unit
 ) {
     var selectedFilter by remember { mutableStateOf(CharacterFilter.PUBLIC) }
 
@@ -159,6 +161,9 @@ fun CharactersScreen(
                                         SessionManager.userId?:return@CharacterCard
                                     ) // tu user real
                                 },
+                                onEdit = { id ->
+                                    onEditCharacter(id)
+                                },
                                 onClick = {
                                     expandedCharacterId = if (isExpanded) null else personaje.id
                                 }
@@ -203,6 +208,7 @@ fun CharacterCard(
     expanded: Boolean,
     isMine: Boolean,
     onDelete: () -> Unit,
+    onEdit: (Long) -> Unit,
     onClick: () -> Unit
 ) {
     val imageName = personaje.imagen.lowercase().substringBefore(".")
@@ -258,13 +264,27 @@ fun CharacterCard(
                     )
 
                     if (isMine) {
-                        TextButton(
-                            onClick = { showDeleteDialog = true },
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = Color.Red.copy(alpha = 0.9f)
-                            )
-                        ) {
-                            Text("Eliminar", color = Color.Black)
+                        Row {
+                            IconButton(
+                                onClick = { onEdit(personaje.id) },
+                                modifier = Modifier.size(40.dp)
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_edit),
+                                    contentDescription = "Editar",
+                                    modifier = Modifier
+                                        .size(24.dp),
+                                    contentScale = ContentScale.Fit
+                                )
+                            }
+
+                            IconButton(onClick = { showDeleteDialog = true }) {
+                                Icon(
+                                    painterResource(id = R.drawable.ic_delete),
+                                    contentDescription = "Eliminar",
+                                    tint = Color.Red
+                                )
+                            }
                         }
                     }
                 }
@@ -336,12 +356,4 @@ fun StatChip(label: String, value: Int) {
             style = MaterialTheme.typography.labelSmall
         )
     }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun CharactersScreenPreview() {
-    CharactersScreen()
 }

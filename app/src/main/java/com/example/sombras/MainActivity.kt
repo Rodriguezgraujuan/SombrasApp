@@ -36,6 +36,7 @@ import com.example.sombras.ui.screens.ClasesBuildsScreen
 import com.example.sombras.ui.screens.CombateScreen
 import com.example.sombras.ui.screens.CreateCharacterScreen
 import com.example.sombras.ui.screens.DadosScreen
+import com.example.sombras.ui.screens.EditCharacterScreen
 import com.example.sombras.ui.screens.GuiaJugadorScreen
 import com.example.sombras.ui.screens.GuiaMasterScreen
 import com.example.sombras.ui.screens.LoreScreen
@@ -133,6 +134,11 @@ class MainActivity : ComponentActivity() {
                                 CharactersScreen(
                                     onCreateCharacterClick = {
                                         navController.navigate(Routes.CreateCharacter.route)
+                                    },
+                                    onEditCharacter = { personajeId ->
+                                        navController.navigate(
+                                            Routes.EditCharacter.create(personajeId)
+                                        )
                                     }
                                 )
                             }
@@ -222,6 +228,20 @@ class MainActivity : ComponentActivity() {
                             RequireLogin(navController) { DadosScreen() }
                         }
 
+                        composable(Routes.EditCharacter.route) { backStack ->
+                            RequireLogin(navController) {
+                                val personajeId =
+                                    backStack.arguments?.getString("personajeId")!!.toLong()
+
+                                EditCharacterScreen(
+                                    personajeId = personajeId,
+                                    userId = SessionManager.userId!!,
+                                    onSaved = {
+                                        navController.popBackStack()
+                                    }
+                                )
+                            }
+                        }
                     }
                 }
             }

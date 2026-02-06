@@ -4,10 +4,12 @@ import com.example.sombras.data.model.CharacterResponse
 import com.example.sombras.data.model.Clase
 import com.example.sombras.data.model.CreateCharacterRequest
 import com.example.sombras.data.model.Raza
+import com.example.sombras.data.model.UpdateCharacterRequest
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface PersonajeApi {
@@ -34,4 +36,12 @@ interface PersonajeApi {
         @Path("personajeId") personajeId: Long,
         @Path("userId") userId: Long
     )
+
+    @PUT("personajes/{personajeId}/usuario/{userId}")
+    suspend fun updatePersonaje(
+        @Path("personajeId") personajeId: Long,
+        @Path("userId") userId: Long,
+        @Body request: UpdateCharacterRequest
+    ): CharacterResponse
+
 }
