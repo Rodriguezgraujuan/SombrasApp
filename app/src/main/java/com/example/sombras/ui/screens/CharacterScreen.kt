@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.sombras.R
@@ -26,10 +25,10 @@ import com.example.sombras.data.repository.PersonajesRepository
 import com.example.sombras.retroflit.RetrofitClient
 import com.example.sombras.ui.viewmodel.CharactersViewModel
 import com.example.sombras.ui.viewmodel.CharactersViewModelFactory
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import com.example.sombras.ui.navigation.Routes
 import com.example.sombras.utils.SessionManager
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 
 enum class CharacterFilter {
     MY, PUBLIC
@@ -42,34 +41,25 @@ fun CharactersScreen(
     onEditCharacter: (Long) -> Unit
 ) {
     var selectedFilter by remember { mutableStateOf(CharacterFilter.PUBLIC) }
+    var expandedCharacterId by remember { mutableStateOf<Long?>(null) }
 
     val api = remember { RetrofitClient.personajeApi }
     val repository = remember { PersonajesRepository(api) }
     val factory = remember { CharactersViewModelFactory(repository) }
     val viewModel: CharactersViewModel = viewModel(factory = factory)
 
-    val charactersState = viewModel.characters.collectAsState()
-    val isLoadingState = viewModel.isLoading.collectAsState()
-    var isLoading = isLoadingState.value
-    var characters by remember { mutableStateOf(listOf<CharacterResponse>()) }
-    var expandedCharacterId by remember { mutableStateOf<Long?>(null) }
+    val characters by viewModel.characters.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    // Función normal, no composable
+    // Función para cargar personajes según filtro
     fun loadCharacters(filter: CharacterFilter) {
-        isLoading = true
-        characters = emptyList() // limpiar lista antes de cargar
-
         when (filter) {
             CharacterFilter.PUBLIC -> viewModel.selectPublic()
-            CharacterFilter.MY -> viewModel.selectMy(userId = SessionManager.userId?:return)
+            CharacterFilter.MY -> SessionManager.userId?.let { viewModel.selectMy(it) }
         }
     }
 
-    LaunchedEffect(charactersState.value) {
-        characters = charactersState.value
-        isLoading = false
-    }
-
+    // Carga inicial
     LaunchedEffect(Unit) {
         loadCharacters(selectedFilter)
     }
@@ -80,7 +70,7 @@ fun CharactersScreen(
     val unselectedTextColor = Color(0xFFCDAA45)
 
     Box(modifier = Modifier.fillMaxSize()) {
-
+        // Fondo
         Image(
             painter = painterResource(id = R.drawable.fondo),
             contentDescription = "Fondo",
@@ -96,7 +86,7 @@ fun CharactersScreen(
                 .padding(top = 50.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            // Filtros
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -132,6 +122,7 @@ fun CharactersScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // Lista de personajes
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -140,32 +131,26 @@ fun CharactersScreen(
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (isLoading) {
-                    Text("Cargando...", color = Color.White)
-                } else if (characters.isEmpty()) {
-                    Text("No hay personajes", color = Color.White)
-                } else {
-                    LazyColumn(
+                when {
+                    isLoading -> Text("Cargando...", color = Color.White)
+                    characters.isEmpty() -> Text("No hay personajes", color = Color.White)
+                    else -> LazyColumn(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         items(characters, key = { it.id }) { personaje ->
-                            val isExpanded = expandedCharacterId == personaje.id
                             CharacterCard(
                                 personaje = personaje,
-                                expanded = isExpanded,
+                                expanded = expandedCharacterId == personaje.id,
                                 isMine = selectedFilter == CharacterFilter.MY,
                                 onDelete = {
-                                    isLoading = true
-                                    viewModel.deleteCharacter(personaje.id,
-                                        SessionManager.userId?:return@CharacterCard
-                                    ) // tu user real
+                                    SessionManager.userId?.let { uid ->
+                                        viewModel.deleteCharacter(personaje.id, uid)
+                                    }
                                 },
-                                onEdit = { id ->
-                                    onEditCharacter(id)
-                                },
+                                onEdit = { id -> onEditCharacter(id) },
                                 onClick = {
-                                    expandedCharacterId = if (isExpanded) null else personaje.id
+                                    expandedCharacterId = if (expandedCharacterId == personaje.id) null else personaje.id
                                 }
                             )
                         }
@@ -175,6 +160,7 @@ fun CharactersScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            // Botón crear personaje
             Row(
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
@@ -190,18 +176,15 @@ fun CharactersScreen(
     }
 }
 
+// Obtiene recurso drawable desde nombre
 @Composable
 fun imageFromName(name: String): Int {
     val context = androidx.compose.ui.platform.LocalContext.current
-
-    val resId = remember(name) {
-        context.resources.getIdentifier(name, "drawable", context.packageName)
-    }
-
+    val resId = remember(name) { context.resources.getIdentifier(name, "drawable", context.packageName) }
     return if (resId != 0) resId else R.drawable.fondo
 }
 
-
+// Tarjeta de personaje
 @Composable
 fun CharacterCard(
     personaje: CharacterResponse,
@@ -230,7 +213,6 @@ fun CharacterCard(
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
         Box {
-
             Image(
                 painter = painterResource(imageRes),
                 contentDescription = personaje.nombre,
@@ -252,7 +234,6 @@ fun CharacterCard(
                 modifier = Modifier.fillMaxSize().padding(14.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth()
@@ -272,8 +253,7 @@ fun CharacterCard(
                                 Image(
                                     painter = painterResource(id = R.drawable.ic_edit),
                                     contentDescription = "Editar",
-                                    modifier = Modifier
-                                        .size(24.dp),
+                                    modifier = Modifier.size(24.dp),
                                     contentScale = ContentScale.Fit
                                 )
                             }
@@ -291,9 +271,7 @@ fun CharacterCard(
 
                 if (expanded) {
                     Column {
-
                         Spacer(Modifier.height(6.dp))
-
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
@@ -307,11 +285,8 @@ fun CharacterCard(
                         }
 
                         Spacer(Modifier.height(6.dp))
-
                         Text(personaje.descripcion, color = Color.White)
-
                         Spacer(Modifier.height(4.dp))
-
                         Text("Clase: ${personaje.clase.nombre}", color = Color.White)
                         Text("Raza: ${personaje.raza.name}", color = Color.White)
                     }
@@ -341,7 +316,6 @@ fun CharacterCard(
         )
     }
 }
-
 
 @Composable
 fun StatChip(label: String, value: Int) {
