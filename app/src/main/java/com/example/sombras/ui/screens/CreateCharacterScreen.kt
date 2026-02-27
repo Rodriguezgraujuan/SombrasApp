@@ -108,6 +108,9 @@ fun CreateCharacterScreen(
     val puntosGastados = intStat + fue + des + con + sab - totalRaceBonus()
     val puntosRestantes = puntosNivel - puntosGastados
 
+    // 🔒 Bloqueo de stats hasta gastar bonus libre
+    val bloquearStats = pendingAnyBonus > 0
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
@@ -156,15 +159,20 @@ fun CreateCharacterScreen(
                     }
                 }
 
-                item { StatSliderFantasy("Inteligencia", intStat, puntosRestantes, brownDark) { intStat = it } }
-                item { StatSliderFantasy("Fuerza", fue, puntosRestantes, brownDark) { fue = it } }
-                item { StatSliderFantasy("Destreza", des, puntosRestantes, brownDark) { des = it } }
-                item { StatSliderFantasy("Constitución", con, puntosRestantes, brownDark) { con = it } }
-                item { StatSliderFantasy("Sabiduría", sab, puntosRestantes, brownDark) { sab = it } }
+                item { StatSliderFantasy("Inteligencia", intStat, puntosRestantes, brownDark, bloquearStats) { intStat = it } }
+                item { StatSliderFantasy("Fuerza", fue, puntosRestantes, brownDark, bloquearStats) { fue = it } }
+                item { StatSliderFantasy("Destreza", des, puntosRestantes, brownDark, bloquearStats) { des = it } }
+                item { StatSliderFantasy("Constitución", con, puntosRestantes, brownDark, bloquearStats) { con = it } }
+                item { StatSliderFantasy("Sabiduría", sab, puntosRestantes, brownDark, bloquearStats) { sab = it } }
 
                 if (pendingAnyBonus > 0) {
                     item {
+                        Text(
+                            "Debes asignar el bonus libre antes de modificar los atributos",
+                            color = Color.Yellow
+                        )
                         Text("Bonus libre: $pendingAnyBonus", color = gold)
+
                         AnyBonusSelector {
                             when(it) {
                                 "INT" -> intStat++
@@ -209,6 +217,7 @@ fun CreateCharacterScreen(
         }
     }
 }
+
 
 
 @Composable
@@ -287,19 +296,27 @@ fun StatSliderFantasy(
     value: Int,
     puntosRestantes: Int,
     sliderColor: Color,
+    bloqueado: Boolean = false, // ← valor por defecto
     onChange: (Int) -> Unit
 ) {
     Column {
-        Text("$label: $value", color = Color(0xFFCDAA45))
+        Text(
+            "$label: $value",
+            color = if (bloqueado) Color.Gray else Color(0xFFCDAA45)
+        )
+
         Slider(
             value = value.toFloat(),
             onValueChange = {
-                if (it.toInt() <= value || puntosRestantes > 0) onChange(it.toInt())
+                if (!bloqueado && (it.toInt() <= value || puntosRestantes > 0)) {
+                    onChange(it.toInt())
+                }
             },
+            enabled = !bloqueado,
             valueRange = 0f..15f,
             colors = SliderDefaults.colors(
-                thumbColor = sliderColor,
-                activeTrackColor = sliderColor,
+                thumbColor = if (bloqueado) Color.Gray else sliderColor,
+                activeTrackColor = if (bloqueado) Color.DarkGray else sliderColor,
                 inactiveTrackColor = Color(0xFF72401D)
             )
         )
@@ -308,11 +325,22 @@ fun StatSliderFantasy(
 
 @Composable
 fun AnyBonusSelector(onSelect: (String) -> Unit) {
+    val gold = Color(0xFFCDAA45)
+    val brownDark = Color(0xFF3D2F21)
+
     Column {
         listOf("INT","FUE","DES","CON","SAB").forEach {
-            Button(onClick = { onSelect(it) }, modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = { onSelect(it) },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = gold,
+                    contentColor = brownDark
+                )
+            ) {
                 Text("Añadir a $it")
             }
         }
     }
 }
+
